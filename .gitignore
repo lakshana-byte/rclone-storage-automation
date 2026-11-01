@@ -1,0 +1,27 @@
+# Environment files containing secrets
+.env
+*.env.local
+
+# Log files
+*.log
+logs/
+
+# Sample data directories and large test files
+samples/
+large_files/
+*.bin
+*.iso
+*.1gb
+*.100mb
+
+# Rclone cache and configs
+.rclone/
+rclone.conf
+
+# Python artifacts
+__pycache__/
+*.pyc
+
+# OS generated files
+.DS_Store
+Thumbs.db

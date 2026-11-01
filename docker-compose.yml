@@ -1,0 +1,52 @@
+version: 3.8
+
+services:
+  # Primary S3-compatible Object Storage Service
+  minio:
+    image: quay.io/minio/minio:RELEASE.2025-04-22T22-12-26Z-cpuv1
+    container_name: minio-primary
+    command: server /data --console-address :9001
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: admin123
+      MINIO_BROWSER: on
+    ports:
+      - 127.0.0.1:9000:9000
+      - 127.0.0.1:9001:9001
+    volumes:
+      - minio-data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD, curl, -f, http://localhost:9000/minio/health/ready]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # Secondary MinIO Service (Used for Bonus Cross-Endpoint Transfers)
+  minio-secondary:
+    image: quay.io/minio/minio:RELEASE.2025-04-22T22-12-26Z-cpuv1
+    container_name: minio-secondary
+    command: server /data --console-address :9101
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: admin123
+      MINIO_BROWSER: on
+    ports:
+      - 127.0.0.1:9100:9000
+      - 127.0.0.1:9101:9101
+    volumes:
+      - minio-data-secondary:/data
+    restart: unless-stopped
+    profiles:
+      - secondary
+    healthcheck:
+      test: [CMD, curl, -f, http://localhost:9000/minio/health/ready]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  minio-data:
+    name: minio-primary-data
+  minio-data-secondary:
+    name: minio-secondary-data

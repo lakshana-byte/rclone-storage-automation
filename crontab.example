@@ -1,0 +1,5 @@
+# Example Crontab Entry for Rclone Automated Synchronization
+# Runs every night at 02:00 AM
+0 2 * * * /home/hp2/workspace/rclone-storage-automation/cron_backup.sh >> /home/hp2/workspace/rclone-storage-automation/cron_output.log 2>&1
+
+# Systemd Timer equivalent is also documented in README.md
