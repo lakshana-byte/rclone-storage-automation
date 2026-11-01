@@ -54,7 +54,7 @@ rclone copy samples/source/large/course-archive-1gb.bin :s3:testpress-source/lar
   -v
 
 echo "=== 5. Verifying Integrity of Uploaded 1 GB File via rclone check ==="
-rclone check samples/source/large/course-archive-1gb.bin :s3:testpress-source/large/course-archive-1gb.bin \
+rclone check samples/source/large :s3:testpress-source/large --include "course-archive-1gb.bin" \
   --config /dev/null \
   --checksum
 
