@@ -1,0 +1,38 @@
+# ==============================================================================
+# Cron Scheduling Example for Rclone Storage Automation
+# ==============================================================================
+
+# 1. Crontab Schedule Entry
+# Runs daily at 02:00 AM UTC
+0 2 * * * /home/hp2/workspace/rclone-storage-automation/cron_job.sh >> /home/hp2/workspace/rclone-storage-automation/cron_output.log 2>&1
+
+# 2. Automated Script with Concurrency Lock (flock)
+# Save as cron_job.sh:
+#!/usr/bin/env bash
+set -eo pipefail
+
+WORKSPACE="/home/hp2/workspace/rclone-storage-automation"
+LOCKFILE="/tmp/rclone_cron.lock"
+
+# Source environment for S3 credentials
+if [ -f "$WORKSPACE/.env" ]; then
+    set -a
+    source "$WORKSPACE/.env"
+    set +a
+fi
+
+# Acquire exclusive non-blocking lock to avoid overlapping jobs
+exec 200>"$LOCKFILE"
+flock -n 200 || {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] Previous backup still in progress. Skipping."
+    exit 0
+}
+
+# Execute synchronization safely
+"$WORKSPACE/transfer.sh" sync \
+    "$WORKSPACE/samples/source/documents" \
+    ":s3:testpress-backup/scheduled-sync" \
+    --execute \
+    --transfers 4 \
+    --retries 3 \
+    --log-file "$WORKSPACE/transfer.log"

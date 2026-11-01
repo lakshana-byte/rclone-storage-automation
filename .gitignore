@@ -13,6 +13,7 @@ large_files/
 *.iso
 *.1gb
 *.100mb
+*.md5
 
 # Rclone cache and configs
 .rclone/
@@ -21,6 +22,14 @@ rclone.conf
 # Python artifacts
 __pycache__/
 *.pyc
+
+# Local runner test scripts & scratch files
+run_*.sh
+verify_*.sh
+generate_samples.py
+cron_backup.sh
+crontab.example
+transfer_worker.py
 
 # OS generated files
 .DS_Store
