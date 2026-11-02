@@ -75,7 +75,7 @@ This document details the architectural decisions, production integration patter
 
 ### Celery Background Task (Python)
 ```python
-from run_rclone import run_rclone_transfer
+# Executed via Python subprocess invocation
 
 def process_video_upload(video_id: str, local_path: str):
     s3_config = {

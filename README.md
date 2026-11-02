@@ -25,7 +25,6 @@ This repository contains a complete, automated toolkit and test harness demonstr
 | **Storage Backend** | MinIO | `RELEASE.2025-04-22` (Local S3-compatible API) |
 | **Containerization** | Docker Engine & Compose | Multi-container local storage topology |
 | **Automation Script** | POSIX Bash | Strict mode (`pipefail`), structured logging, exit codes |
-| **Worker Integration** | Python 3 | `subprocess`-based executor for Celery background tasks |
 | **Host OS** | Linux / Ubuntu 22.04 LTS | WSL2 environment |
 
 ---
@@ -39,10 +38,8 @@ rclone-storage-automation/
 ├── DEVOPS_IMPLEMENTATION.md   # Architectural decisions, deep-dive answers & production guide
 ├── README.md                  # Project overview, workflow guide, and verification summary
 ├── commands.md                # Comprehensive CLI syntax reference and command playbook
-├── cron-example.txt           # Production crontab entry with flock concurrency locking
 ├── docker-compose.yml         # Compose specification for primary and secondary MinIO nodes
 ├── results.md                 # Empirical transfer benchmarks, logs, and MD5 verifications
-├── run_rclone.py              # Celery/background worker Python integration
 └── transfer.sh                # Reusable transfer automation script with dry-run safety
 ```
 
@@ -53,7 +50,7 @@ rclone-storage-automation/
 ```
                       +---------------------------------------+
                       |       Orchestrator / Automation       |
-                      |  (transfer.sh / run_rclone.py / Cron) |
+                      |          (transfer.sh / CLI)          |
                       +---------------------------------------+
                                           |
                       Credentials in-memory (RCLONE_S3_*)
@@ -192,10 +189,8 @@ Every requirement was validated through rigorous testing. Detailed logs and numb
 
 ## Bonus Implementations
 
-* **Direct Cross-Endpoint S3 Streaming:** Streamed objects directly from `MinIO:9000` to `MinIO:9100` without writing intermediate files to disk (`run_bonus_cross_endpoint.sh`).
+* **Direct Cross-Endpoint S3 Streaming:** Streamed objects directly from `MinIO:9000` to `MinIO:9100` without writing intermediate files to disk.
 * **S3 Multipart Cleanup:** Verified automated pruning of stale multipart fragments with `rclone backend cleanup`.
-* **Celery / Python Subprocess Execution:** Built [`run_rclone.py`](run_rclone.py) to demonstrate programmatic execution with isolated environment variables.
-* **Cron Automation with File Locking:** Implemented [`cron-example.txt`](cron-example.txt) using Linux `flock` to guarantee backup jobs never overlap.
 
 ---
 
