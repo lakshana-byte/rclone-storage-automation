@@ -193,7 +193,6 @@ Every requirement was validated through rigorous testing. Detailed logs and numb
 ## Bonus Implementations
 
 * **Direct Cross-Endpoint S3 Streaming:** Streamed objects directly from `MinIO:9000` to `MinIO:9100` without writing intermediate files to disk (`run_bonus_cross_endpoint.sh`).
-* **Transparent Client-Side Encryption:** Applied Rclone's `:crypt:` backend to obfuscate filenames and encrypt data on-the-fly (`run_bonus_crypt.sh`).
 * **S3 Multipart Cleanup:** Verified automated pruning of stale multipart fragments with `rclone backend cleanup`.
 * **Celery / Python Subprocess Execution:** Built [`run_rclone.py`](run_rclone.py) to demonstrate programmatic execution with isolated environment variables.
 * **Cron Automation with File Locking:** Implemented [`cron-example.txt`](cron-example.txt) using Linux `flock` to guarantee backup jobs never overlap.
